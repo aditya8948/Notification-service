@@ -18,3 +18,19 @@ This is  a base js project template , which anyone can use as it has been prepar
   - 'service' => contains the business logic and innteract with repositories for data from the database 
 
   - 'utils' => contains helper method , error classes etc
+
+  ### SETUP THE PROJECT
+
+  - Download this template from github and open it in your text editor .
+  - In the root directory creste a '.env' file and add the following env variable 
+
+  PORT = <port number of your choice >
+
+  - Go inside the 'src' folder and execute the following command :
+ .....
+  npx sequelize init 
+.....
+
+  - BY executing the above command you will get migration and seeder folder along with config .json inside config folder 
+
+- If you are setting up your development environment , then write the username of your DB , password and dialect mention whatever db you are using for exam ple : mysql, mariab etc
