@@ -1,7 +1,8 @@
 const { TicketRepository } = require('../repositories');
 const { MAILER } = require('../config');
+const { Enums } = require('../utils/common');
 
-
+const { SUCCESS, FAILED } = Enums.STATUS;
 const ticketRepo = new TicketRepository();
 
 async function sendMail(mailFrom, mailTo, subject, text){
@@ -20,10 +21,17 @@ async function sendMail(mailFrom, mailTo, subject, text){
 
 async function createTicket(data){
     try {
-        const response = await ticketRepo.create(data);
-        console.log(response);
-        return response;
-        
+        const ticket = await ticketRepo.create(data);
+        const senderEmail = MAILER.options?.auth?.user || process.env.GMAIL_EMAIL;
+        const mailResponse = await sendMail(senderEmail, data.recipientEmail, data.subject, data.content);
+
+        await ticketRepo.update(ticket.id, { status: SUCCESS });
+
+        return {
+            ...ticket.toJSON(),
+            mailResponse,
+            status: SUCCESS
+        };
     } catch (error) {
         console.log(error);
         throw error;
