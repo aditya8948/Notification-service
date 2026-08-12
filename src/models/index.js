@@ -6,7 +6,22 @@ const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const configPath = path.join(__dirname, '..', 'config', 'config.json');
+const configFile = fs.existsSync(configPath) ? require(configPath) : {};
+const config = configFile[env] || (
+  process.env.DATABASE_URL
+    ? {
+        use_env_variable: 'DATABASE_URL',
+        dialect: process.env.DB_DIALECT || 'mysql'
+      }
+    : {
+        username: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || null,
+        database: process.env.DB_NAME || 'notification_db',
+        host: process.env.DB_HOST || '127.0.0.1',
+        dialect: process.env.DB_DIALECT || 'mysql'
+      }
+);
 const db = {};
 
 let sequelize;

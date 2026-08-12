@@ -1,10 +1,11 @@
 const amqplib = require('amqplib');
+const { RABBITMQ_URL } = require('./server_config');
 
 let channel , connection;
 
 async function connectQueue(){
     try {
-        connection = await amqplib.connect("amqp://localhost");
+        connection = await amqplib.connect(RABBITMQ_URL);
         channel = await connection.createChannel();
         await channel.assertQueue("noti-queue");
 

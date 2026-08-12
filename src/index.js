@@ -1,10 +1,11 @@
 const express = require("express");
 const amqplib = require('amqplib');
 const {EmailService} = require('./services')
+const {serverConfig, Logger } = require("./config");
 
 async function connectQueue(){
     try {
-        const connection = await amqplib.connect("amqp://localhost");
+        const connection = await amqplib.connect(serverConfig.RABBITMQ_URL);
         const channel = await connection.createChannel();
         await channel.assertQueue("noti-queue", { durable: true });
 
@@ -36,7 +37,6 @@ async function connectQueue(){
 
 
 
-const {serverConfig, Logger } = require("./config");
 const app = express();
 
 const apiRoutes = require('./routes');
